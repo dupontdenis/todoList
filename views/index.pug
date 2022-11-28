@@ -1,0 +1,52 @@
+extends layout
+
+block content
+
+  form(action='./addTask' method='POST' class='form-registration')
+    div(class='row my-3')
+        div(class='col-md-2 align-bottom')
+          label(for="taskName" class='fs-5') New task
+        div(class='col-md-8')
+          input(class="form-control form-control-sm" type="text" name='taskName', placeholder="Enter new task here" )
+        div(class='col-md-2 text-end')
+          button(class='btn btn-success btn-sm' type='submit') Add task
+
+
+  h5(class='my-2') Current tasks
+
+  div(class='row mb-3 border-bottom border-3')
+    div(class='col-md-6 fw-bold') Task
+    div(class='col-md-2 fw-bold') Created
+    div(class='col-md-4 fw-bold') Action
+
+  each task in currentTasks
+    div(class='row mb-2')
+      div(class='col-sm-6') #{task.taskName}
+      //- utilisation  du module date-fns
+      div(class='col-sm-2') #{format(task.createDate, "dd-MM-yyyy")}
+      div(class='col-sm-4')
+        form(class="d-flex justify-content-between" action="", method="post", role="form")
+          button(class='btn btn-primary btn-sm mx-1' formaction=`/completeTask/${task._id}` type="submit") Complete
+          button(class='btn btn-danger btn-sm mx-1' formaction=`/deleteTask/${task._id}` type="submit") Delete
+
+  h5(class='my-2') Completed tasks
+  
+  div(class='row mb-3 border-bottom border-3')
+    div(class='col-sm-6 fw-bold') Task
+    div(class='col-sm-2 fw-bold') Created
+    div(class='col-sm-2 fw-bold') Completed
+    div(class='col-sm-2 fw-bold') Delete
+  each task in completedTasks
+    div(class='row mb-3')
+      div(class='col-sm-6') #{task.taskName}
+      div(class='col-sm-2') #{format(task.createDate, "dd-MM-yyyy")}
+      div(class='col-sm-2') #{format(task.completedDate, "dd-MM-yyyy")}
+      form(class='col-sm-2 text-end'  action="", method="post", role="form")
+        button(class='btn btn-danger btn-sm mx-1' formaction=`/deleteTask/${task._id}` type="submit") Delete
+    div(class='row mb-3 align-items-end')
+      //- div(class='col-sm-10') Duration: #{JSON.stringify(intervalToDuration({start: new Date(task.createDate),end: new Date(task.completedDate)}))}
+      -let {days, hours, minutes, seconds} = intervalToDuration({start: new Date(task.createDate),end: new Date(task.completedDate)})
+      div(class='col-sm-6')
+      div(class='col-sm-6') Duration: days=#{days}, hours=#{hours}, minutes=#{minutes}, seconds=#{seconds}
+
+ 
